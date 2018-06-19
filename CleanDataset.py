@@ -44,9 +44,21 @@ def cleanText(rawDF):
     # Removing RT tags.
     cleanDF['text'] = cleanDF['text'].str.replace("RT", '')
 
-    # Removing Emojis
+    # Removing Emojis (OPTIONAL)
     #emojiRgx = re.compile('[\U00010000-\U0010ffff]', flags=re.UNICODE)
     #cleanDF['text'] = cleanDF['text'].str.replace(emojiRgx, '')
+
+    # Removing punctuation (OPTIONAL)
+    punctRgx = r'[^\w\s]'
+    cleanDF['text'] = cleanDF['text'].str.replace(punctRgx, '')
+
+    # Removing basic stop words to speed up tolkenizing
+    stopWords = ["a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", 
+"or", "so", "such", "to", "that", "the", "their", "then", "there", "these", "they", "this", "was", 
+"will", "with"]
+    stopRemove = '|'.join(stopWords)
+    stopRgx = r'\b('+stopRemove+r')\b'
+    cleanDF['text'] = cleanDF['text'].str.replace(stopRgx, '')
 
     # Forcing all string characters to be lower case.
     cleanDF['text'] = cleanDF['text'].str.lower()
