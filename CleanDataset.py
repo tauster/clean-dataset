@@ -23,6 +23,9 @@ def cleanText(rawDF):
     # Creating a copy of the original dataframe.
     cleanDF = rawDF.copy()
 
+    # Forcing all string characters to be lower case.
+    cleanDF['text'] = cleanDF['text'].str.lower()
+
     # Removing html tags and attributes.
     htmlTagsRgx = r'<[^>]+>'
     cleanDF['text'] = cleanDF['text'].str.replace(htmlTagsRgx, '')
@@ -42,26 +45,36 @@ def cleanText(rawDF):
     cleanDF['text'] = cleanDF['text'].str.replace(urlRgx, '')
 
     # Removing RT tags.
-    cleanDF['text'] = cleanDF['text'].str.replace("RT", '')
+    cleanDF['text'] = cleanDF['text'].str.replace("rt", '')
 
     # Removing Emojis (OPTIONAL)
     #emojiRgx = re.compile('[\U00010000-\U0010ffff]', flags=re.UNICODE)
     #cleanDF['text'] = cleanDF['text'].str.replace(emojiRgx, '')
 
-    # Removing punctuation (OPTIONAL)
-    punctRgx = r'[^\w\s]'
-    cleanDF['text'] = cleanDF['text'].str.replace(punctRgx, '')
-
     # Removing basic stop words to speed up tolkenizing
-    stopWords = ["a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "if", "in", "into", "is", "it", "no", "not", "of", "on", 
-"or", "so", "such", "to", "that", "the", "their", "then", "there", "these", "they", "this", "was", 
-"will", "with"]
+    stopWords = ["a", "an", "and", "are", "as", "at",
+                "be", "but", "by",
+                "de", "des",
+                "e", "el",
+                "for",
+                "hi", "hey", "he",
+                "if", "i", "in", "into", "is", "it", "it's", "its",
+                "la", "le", "les",
+                "no", "not",
+                "of", "on", "or",
+                "que",
+                "row",
+                "s", "she", "so", "such",
+                "to", "that", "the", "their", "then", "there", "these", "they", "they're", "this",
+                "was", "where", "will", "with"]
+    
     stopRemove = '|'.join(stopWords)
     stopRgx = r'\b('+stopRemove+r')\b'
     cleanDF['text'] = cleanDF['text'].str.replace(stopRgx, '')
 
-    # Forcing all string characters to be lower case.
-    cleanDF['text'] = cleanDF['text'].str.lower()
+    # Removing punctuation (OPTIONAL)
+    punctRgx = r'[^\w\s]'
+    cleanDF['text'] = cleanDF['text'].str.replace(punctRgx, '')
 
     # Removing twitter handles.
     handle_rgx = r'@\S+'
